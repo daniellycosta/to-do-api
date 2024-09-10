@@ -23,4 +23,49 @@ export class TaskController {
     await tasksRepository.save(task);
     return res.status(200).json({ message: "Task created successfully", task });
   }
+  static async editTask(req: Request, res: Response) {
+    const { id } = req.params;
+    const { title, description } = req.body;
+
+    const tasksRepository = AppDataSource.getRepository(Task);
+    const task = await tasksRepository.findOne({ where: { id } });
+
+    if (!task) {
+      return res.status(404).json({ message: "Task not found" });
+    }
+
+    task.title = title;
+    task.description = description;
+    task.updatedAt = new Date();
+
+    await tasksRepository.save(task);
+    return res.status(200).json({ message: "Task updated successfully", task });
+  }
+  static async deleteTask(req: Request, res: Response) {
+    const { id } = req.params;
+
+    const tasksRepository = AppDataSource.getRepository(Task);
+    const task = await tasksRepository.findOne({ where: { id } });
+
+    if (!task) {
+      return res.status(404).json({ message: "Task not found" });
+    }
+
+    await tasksRepository.delete(id);
+    return res.status(200).json({ message: "Task deleted successfully" });
+  }
+  static async completeTask(req: Request, res: Response) {
+    const { id } = req.params;
+
+    const tasksRepository = AppDataSource.getRepository(Task);
+    const task = await tasksRepository.findOne({ where: { id } });
+
+    if (!task) {
+      return res.status(404).json({ message: "Task not found" });
+    }
+
+    task.completedAt = new Date();
+    await tasksRepository.save(task);
+    return res.status(200).json({ message: "Task completed successfully" });
+  }
 }

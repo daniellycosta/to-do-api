@@ -1,27 +1,34 @@
+import { Request, Response } from "express";
 import { validateRequest } from "../middleware";
 import { taskSchema } from "../schemas";
+
+import { TaskController } from "../controllers";
 
 const express = require("express");
 const router = express.Router();
 
-router.get("/", (req, res) => {
-  res.send("get tasks");
+router.get("/", (req: Request, res: Response) => {
+  TaskController.getAllTasks(req, res);
 });
 
-router.post("/", validateRequest(taskSchema), (req, res) => {
-  res.send("post tasks");
+router.post("/", validateRequest(taskSchema), (req: Request, res: Response) => {
+  TaskController.createTask(req, res);
 });
 
-router.put("/:id", (req, res) => {
-  res.send("edit task");
+router.put(
+  "/:id",
+  validateRequest(taskSchema),
+  (req: Request, res: Response) => {
+    TaskController.editTask(req, res);
+  }
+);
+
+router.delete("/:id", (req: Request, res: Response) => {
+  TaskController.deleteTask(req, res);
 });
 
-router.delete("/:id", (req, res) => {
-  res.send("delete task");
-});
-
-router.patch("/:id/complete", (req, res) => {
-  res.send("About birds");
+router.patch("/:id/complete", (req: Request, res: Response) => {
+  TaskController.completeTask(req, res);
 });
 
 module.exports = router;
