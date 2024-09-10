@@ -1,3 +1,4 @@
+import "dotenv/config";
 import { DataSource } from "typeorm";
 
 const {
@@ -15,4 +16,5 @@ export const AppDataSource = new DataSource({
   username: DATABASE_USER,
   password: DATABASE_PASS,
   database: DATABASE_NAME,
+  migrations: ["app/migrations/*.ts"],
 });
